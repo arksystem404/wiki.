@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WikiWave // Explore Smarter</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <style>
+    :root {
+      --primary-bg: #f8f9fa;
+      --secondary-bg: #e9ecef;
+      --primary-text: #202124;
+      --secondary-text: #5f6368;
+      --accent-color: #4285f4;
+      --hover-bg: #f1f3f4;
+      --border-color: #ced4da;
+      --font-size-base: 1em;
+      --border-radius: 20px;
+      --font-family: 'Roboto', sans-serif;
+      --gradient: none;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --primary-bg: #121212;
+      --secondary-bg: #1e1e1e;
+      --primary-text: #ffffff;
+      --secondary-text: #2a2a2a;
+      --hover-bg: #2a2a2a;
+      --border-color: #444;
+    }
+
+    [data-theme="high-contrast"] {
+      --primary-bg: #000000;
+      --secondary-bg: #222222;
+      --primary-text: #ffffff;
+      --secondary-text: #FFDE21;
+      --accent-color: #00ff00;
+      --hover-bg: #333333;
+      --border-color: #ffffff;
+    }
+
+    [data-theme="sunset"] {
+      --primary-bg: #2e1a47;
+      --secondary-bg: #4b2c5e;
+      --primary-text: #fdd9a0;
+      --secondary-text: #330066;
+      --accent-color: #ff7b54;
+      --hover-bg: #663f67;
+      --border-color: #fdd9a0;
+    }
+
+    [data-theme="midnight"] {
+      --primary-bg: #0b0c10;
+      --secondary-bg: #1f2833;
+      --primary-text: #c5c6c7;
+      --secondary-text: #000080;
+      --accent-color: #45a29e;
+      --hover-bg: #2b2e33;
+      --border-color: #66fcf1;
+    }
+
+    [data-theme="ocean"] {
+      --primary-bg: #1a2a6c;
+      --secondary-bg: #2a4858;
+      --primary-text: #444444;
+      --secondary-text: #355C7D;
+      --accent-color: #00bcd4;
+      --hover-bg: #345878;
+      --border-color: #a0d8ef;
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    [data-theme="aurora"] {
+      --primary-bg: linear-gradient(135deg, #5ee7df, #b490ca);
+      --secondary-bg: rgba(255, 255, 255, 0.2);
+      --primary-text: #2d3436;
+      --secondary-text: #636e72;
+      --accent-color: #6abce2;
+      --hover-bg: rgba(255, 255, 255, 0.25);
+      --border-color: rgba(255, 255, 255, 0.3);
+      --font-family: 'Quicksand', sans-serif;
+      --gradient: linear-gradient(45deg, #5ee7df, #b490ca);
+      --shadow-color: rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="neo"] {
+      --primary-bg: #0f0c29;
+      --secondary-bg: #302b63;
+      --primary-text: #333333;
+      --secondary-text: #03045E;
+      --accent-color: #9D4EDD;
+      --hover-bg: #24243e;
+      --border-color: #ff66dd;
+      --font-family: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      margin: 0;
+      padding: 0;
+      background: var(--primary-bg);
+      color: var(--primary-text);
+      transition: background 0.3s ease, color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      font-size: var(--font-size-base);
+      border-radius: var(--border-radius);
+    }
+
+    .container {
+      max-width: 900px;
+      width: 95%;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.5em;
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .wikicolor {
+      color: #045687;
+    }
+
+    .wavecolor {
+      color: #F8DDA2;
+    }
+
+    #search-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    #search-box {
+      display: flex;
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      gap: 8px;
+      padding: 5px;
+      background: var(--secondary-bg);
+    }
+
+    #search-box input {
+      border-radius: 20px;
+      padding: 12px 20px;
+    }
+
+    #search-box button {
+      border-radius: 20px;
+    }
+
+    #predictive-results {
+      position: absolute;
+      width: 100%;
+      background: var(--secondary-bg);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 100;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .predictive-item {
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .predictive-item:hover {
+      background: var(--hover-bg);
+    }
+
+    .random-btn {
+      background: var(--accent-color);
+      opacity: 0.9;
+    }
+
+    .random-btn:hover {
+      opacity: 1;
+    }
+
+    #stats-menu {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto;
+      background: var(--secondary-bg);
+      padding: 15px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+      display: none;
+      /* Initially hidden */
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 10px;
+      background: var(--primary-bg);
+      border-radius: 10px;
+    }
+
+    .stat-value {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .charts-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .chart-wrapper {
+      background: var(--primary-bg);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 12px 15px;
+      border: none;
+      font-size: 1em;
+      background-color: var(--secondary-bg);
+      color: var(--primary-text);
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      border-radius: var(--border-radius);
+      /* Added border-radius */
+    }
+
+    button:hover {
+      background-color: #357ae8;
+    }
+
+    #results {
+      margin-top: 30px;
+      width: 100%;
+    }
+
+    .result-item {
+      margin-bottom: 20px;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    [data-theme="dark"] .result-item,
+    [data-theme="high-contrast"] .result-item,
+    [data-theme="sunset"] .result-item,
+    [data-theme="midnight"] .result-item {
+      background-color: var(--secondary-bg);
+    }
+
+    .result-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .result-title {
+      font-size: 1.2em;
+      font-weight: 500;
+      color: var(--accent-color);
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .result-snippet {
+      color: var(--secondary-text);
+      line-height: 1.6;
+    }
+
+    #article-content {
+      margin-top: 30px;
+      padding: 30px;
+      border-radius: var(--border-radius);
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      display: none;
+      line-height: 1.7;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    [data-theme="dark"] #article-content,
+    [data-theme="high-contrast"] #article-content,
+    [data-theme="sunset"] #article-content,
+    [data-theme="midnight"] #article-content {
+      background-color: var(--secondary-bg);
+    }
+
+    #article-content h2,
+    #article-content p {
+      color: var(--primary-text);
+    }
+
+    #back-button {
+      padding: 10px 20px;
+      background-color: var(--secondary-bg);
+      color: var(--primary-text);
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+
+    #settings-button,
+    #stats-button,
+    #save-settings-button {
+      position: absolute;
+      top: 20px;
+      padding: 10px 15px;
+      background-color: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #stats-button {
+      right: 80px;
+    }
+
+    #settings-button {
+      right: 20px;
+    }
+
+    #stats-menu {
+      right: 80px !important;
+    }
+
+
+    #scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 12px 15px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2em;
+      display: none;
+      z-index: 1000;
+    }
+
+    #settings-menu {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 9;
+      display: none;
+    }
+
+    .settings-option {
+      margin-bottom: 15px;
+    }
+
+    .settings-option label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--secondary-text);
+      font-size: 0.9em;
+    }
+
+    .settings-option input[type="range"],
+    .settings-option select {
+      width: 150px;
+    }
+
+    .credits {
+      font-size: 0.8em;
+      color: var(--secondary-text);
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #settings-button,
+    #stats-button,
+    #save-settings-button {
+      transition: all 0.3s ease;
+    }
+
+    #settings-button:hover,
+    #stats-button:hover,
+    #save-settings-button:hover {
+      transform: scale(1.05);
+      background-color: var(--hover-bg);
+    }
+
+    #settings-menu,
+    #stats-menu {
+      animation: fadeSlideIn 0.4s ease-out both;
+    }
+
+    @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #settings-button {
+      right: 20px;
+    }
+
+    #stats-button {
+      right: 140px;
+    }
+
+    #stats-menu {
+      right: 190px !important;
+    }
+
+    #settings-menu {
+      top: 65px;
+    }
+
+    .stat-item,
+    .settings-option {
+      animation: fadeSlideIn 0.4s ease-out both;
+    }
+  </style>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins:wght@400;500;600&family=Quicksand:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container">
+    <h1><span class="wikicolor">Wiki</span><span class="wavecolor">Wave 🌊</span></h1>
+    <div id="search-container">
+      <div id="search-box">
+        <input type="text" id="searchInput" placeholder="Search WikiWave 🔍" oninput="handleSearchInput(event)" />
+        <button onclick="searchWikipedia()">Search</button>
+        <button onclick="getRandomArticle()" class="random-btn">🎲 Random</button>
+      </div>
+      <div id="predictive-results"></div>
+    </div>
+    <div id="stats-menu">
+      <h3>📊 Stats Dashboard</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <p>📊 Searches Today</p>
+          <div class="stat-value" id="search-count">0</div>
+        </div>
+        <div class="stat-item">
+          <p>📖 Articles Read</p>
+          <div class="stat-value" id="article-count">0</div>
+        </div>
+        <div class="stat-item">
+          <p>🕒 Last Search</p>
+          <div id="last-search" style="font-size: 0.9em">-</div>
+        </div>
+      </div>
+    </div>
+    <div id="results"></div>
+    <div id="article-content"></div>
+    <button id="back-button" onclick="showSearchResults()">⬅️ Back</button>
+  </div>
+
+  <button id="settings-button" onclick="toggleSettings()">⚙️ Settings</button>
+  <button id="stats-button" onclick="toggleStats()">📊 Stats </button>
+  <div id="settings-menu">
+    <div class="settings-option">
+      <label for="font-size-slider">📝 Font Size:</label>
+      <input type="range" id="font-size-slider" min="0.8" max="1.5" step="0.05" value="1"
+        oninput="setFontSize(this.value)" />
+    </div>
+    <div class="settings-option">
+      <label for="theme-toggle">🎨 Theme:</label>
+      <select id="theme-toggle" onchange="toggleTheme(this.value)">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="high-contrast">High Contrast</option>
+        <option value="sunset">Sunset</option>
+        <option value="midnight">Midnight</option>
+        <option value="ocean">Ocean</option>
+        <option value="aurora">Aurora</option>
+        <option value="neo">Neo</option>
+      </select>
+    </div>
+    <div class="settings-option">
+      <label for="animations-toggle">✨ Animations:</label>
+      <select id="animations-toggle" onchange="toggleAnimations(this.value)">
+        <option value="on">On</option>
+        <option value="off">Off</option>
+      </select>
+    </div>
+    <div class="settings-option">
+      <label for="language-toggle">🌍 Language:</label>
+      <select id="language-toggle" onchange="changeLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="zh">中文</option>
+        <option value="id">Bahasa Indonesia</option>
+      </select>
+    </div>
+    <div class="credits">
+      <p>Made by arXiVius</p>
+    </div>
+  </div>
+
+  <button id="scroll-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">⬆️</button>
+
+  <script>
+    const resultsContainer = document.getElementById('results');
+    const articleContentDiv = document.getElementById('article-content');
+    const backButton = document.getElementById('back-button');
+    const settingsMenu = document.getElementById('settings-menu');
+    const statsMenu = document.getElementById('stats-menu'); //Added statsMenu
+    const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+    function toggleSettings() {
+      settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleStats() {
+      statsMenu.style.display = statsMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function setFontSize(size) {
+      document.documentElement.style.setProperty('--font-size-base', `${size}em`);
+    }
+
+    function toggleTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+
+    function toggleAnimations(state) {
+      const items = document.querySelectorAll('.result-item, #article-content, #back-button');
+      items.forEach(item => {
+        item.style.animation = state === 'on' ? 'fadeIn 0.3s ease-out forwards' : 'none';
+      });
+    }
+
+    function changeLanguage(lang) {
+      updateUIText(lang);
+      document.documentElement.setAttribute('lang', lang);
+      // ... rest of the changeLanguage function
+    }
+
+    function searchWikipedia() {
+      const searchTerm = document.getElementById('searchInput').value;
+      if (!searchTerm) {
+        alert("Please type something in the search box.");
+        return;
+      }
+
+      updateStats('search');
+      resultsContainer.innerHTML = '<p>Searching... ⏳</p>';
+      articleContentDiv.style.display = 'none';
+      backButton.style.display = 'none';
+
+      fetch(`https://${document.documentElement.getAttribute('lang') || 'en'}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`)
+        .then(res => res.json())
+        .then(data => {
+          resultsContainer.innerHTML = '';
+          if (data.query && data.query.search.length) {
+            data.query.search.forEach(item => {
+              const el = document.createElement('div');
+              el.className = 'result-item';
+              el.innerHTML = `<div class="result-title" onclick="fetchArticleContent('${item.title.replace(/'/g, "\\'")}')">${item.title}</div><div class="result-snippet">${item.snippet} ✨</div>`;
+              resultsContainer.appendChild(el);
+            });
+          } else {
+            resultsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff4444; font-size: 1.2em;">Oops! You just got lost in WikiSpace! 🚀<br>No results found for your search 😢</div>';
+          }
+        })
+        .catch(err => {
+          resultsContainer.innerHTML = `<p>Error: ${err.message} ⚠️</p>`;
+        });
+    }
+
+    function fetchArticleContent(title) {
+      updateStats('article');
+      resultsContainer.style.display = 'none';
+      articleContentDiv.innerHTML = '<p>Loading article... 📄</p>';
+      articleContentDiv.style.display = 'block';
+      backButton.style.display = 'block';
+
+      fetch(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(title)}&format=json&prop=text&origin=*`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.parse && data.parse.text && data.parse.text['*']) {
+            articleContentDiv.innerHTML = data.parse.text['*'];
+            // Fix image loading
+            articleContentDiv.querySelectorAll('img').forEach(img => {
+              if (img.src.startsWith('//')) {
+                img.src = 'https:' + img.src;
+              } else if (img.src.startsWith('/wiki/')) {
+                img.src = 'https://wikipedia.org' + img.src;
+              }
+              // Add error handling for images
+              img.onerror = function () {
+                this.style.border = '1px dashed #ccc';
+                this.style.padding = '10px';
+                this.style.width = '100px';
+                this.style.height = '100px';
+                this.style.display = 'inline-flex';
+                this.style.alignItems = 'center';
+                this.style.justifyContent = 'center';
+                this.style.textAlign = 'center';
+                this.style.color = 'var(--secondary-text)';
+                this.style.backgroundColor = 'var(--secondary-bg)';
+                this.alt = '📷 Image not available';
+              };
+            });
+            [...articleContentDiv.querySelectorAll('.editsection, #toc, .infobox')].forEach(el => el.remove());
+          } else {
+            articleContentDiv.innerHTML = '<p>Failed to retrieve article content 😞</p>';
+          }
+        })
+        .catch(err => {
+          articleContentDiv.innerHTML = `<p>Error: ${err.message} ❌</p>`;
+        });
+    }
+
+    function showSearchResults() {
+      resultsContainer.style.display = 'block';
+      articleContentDiv.style.display = 'none';
+      backButton.style.display = 'none';
+    }
+
+    function loadSettings() {
+      try {
+        const settings = JSON.parse(localStorage.getItem('wikiwave_settings') || '{}');
+
+        // Set default values if not present
+        settings.theme = settings.theme || 'light';
+        settings.fontSize = settings.fontSize || '1';
+        settings.animations = settings.animations || 'on';
+        settings.language = settings.language || 'en';
+
+        // Apply settings
+        toggleTheme(settings.theme);
+        setFontSize(settings.fontSize);
+        toggleAnimations(settings.animations);
+        changeLanguage(settings.language);
+
+        // Update UI controls
+        document.getElementById('theme-toggle').value = settings.theme;
+        document.getElementById('font-size-slider').value = settings.fontSize;
+        document.getElementById('animations-toggle').value = settings.animations;
+        document.getElementById('language-toggle').value = settings.language;
+
+        // Save initialized settings
+        localStorage.setItem('wikiwave_settings', JSON.stringify(settings));
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        // Reset to defaults if there's an error
+        localStorage.removeItem('wikiwave_settings');
+      }
+    }
+
+    function saveSettings() {
+      const settings = {
+        theme: document.getElementById('theme-toggle').value,
+        fontSize: document.getElementById('font-size-slider').value,
+        animations: document.getElementById('animations-toggle').value,
+        language: document.getElementById('language-toggle').value
+      };
+      localStorage.setItem('wikiwave_settings', JSON.stringify(settings));
+      alert('Settings saved!');
+    }
+
+    const uiTranslations = {
+      'en': {
+        search_placeholder: 'Search WikiWave 🔍',
+        searching: 'Searching... ⏳',
+        no_results: 'No results found 😢',
+        loading_article: 'Loading article... 📄',
+        back: '⬅️ Back',
+        settings: '⚙️ Settings',
+        font_size: '📝 Font Size:',
+        theme: '🎨 Theme:',
+        animations: '✨ Animations:',
+        language: '🌍 Language:'
+      },
+      'es': {
+        search_placeholder: 'Buscar WikiWave 🔍',
+        searching: 'Buscando... ⏳',
+        no_results: 'No se encontraron resultados 😢',
+        loading_article: 'Cargando artículo... 📄',
+        back: '⬅️ Volver',
+        settings: '⚙️ Ajustes',
+        font_size: '📝 Tamaño de Fuente:',
+        theme: '🎨 Tema:',
+        animations: '✨ Animaciones:',
+        language: '🌍 Idioma:'
+      },
+      'fr': {
+        search_placeholder: 'Rechercher WikiWave 🔍',
+        searching: 'Recherche... ⏳',
+        no_results: 'Aucun résultat trouvé 😢',
+        loading_article: 'Chargement de l\'article... 📄',
+        back: '⬅️ Retour',
+        settings: '⚙️ Paramètres',
+        font_size: '📝 Taille de Police:',
+        theme: '🎨 Thème:',
+        animations: '✨ Animations:',
+        language: '🌍 Langue:'
+      },
+      'de': {
+        search_placeholder: 'WikiWave durchsuchen 🔍',
+        searching: 'Suche läuft... ⏳',
+        no_results: 'Keine Ergebnisse gefunden 😢',
+        loading_article: 'Artikel wird geladen... 📄',
+        back: '⬅️ Zurück',
+        settings: '⚙️ Einstellungen',
+        font_size: '📝 Schriftgröße:',
+        theme: '🎨 Design:',
+        animations: '✨ Animationen:',
+        language: '🌍 Sprache:'
+      },
+      'zh': {
+        search_placeholder: '搜索 WikiWave 🔍',
+        searching: '搜索中... ⏳',
+        no_results: '未找到结果 😢',
+        loading_article: '加载文章中... 📄',
+        back: '⬅️ 返回',
+        settings: '⚙️ 设置',
+        font_size: '📝 字体大小:',
+        theme: '🎨 主题:',
+        animations: '✨ 动画:',
+        language: '🌍 语言:'
+      },
+      'id': {
+        search_placeholder: 'Cari WikiWave 🔍',
+        searching: 'Mencari... ⏳',
+        no_results: 'Tidak ada hasil 😢',
+        loading_article: 'Memuat artikel... 📄',
+        back: '⬅️ Kembali',
+        settings: '⚙️ Pengaturan',
+        font_size: '📝 Ukuran Font:',
+        theme: '🎨 Tema:',
+        animations: '✨ Animasi:',
+        language: '🌍 Bahasa:'
+      }
+    };
+
+    function updateUIText(lang) {
+      document.getElementById('searchInput').placeholder = uiTranslations[lang].search_placeholder;
+      document.getElementById('settings-button').textContent = uiTranslations[lang].settings;
+      document.getElementById('back-button').textContent = uiTranslations[lang].back;
+      document.querySelectorAll('.settings-option label').forEach(label => {
+        if (label.htmlFor === 'font-size-slider') label.textContent = uiTranslations[lang].font_size;
+        if (label.htmlFor === 'theme-toggle') label.textContent = uiTranslations[lang].theme;
+        if (label.htmlFor === 'animations-toggle') label.textContent = uiTranslations[lang].animations;
+        if (label.htmlFor === 'language-toggle') label.textContent = uiTranslations[lang].language;
+      });
+    }
+
+    function changeLanguage(lang) {
+      const apiLangMap = {
+        'en': 'en',
+        'es': 'es',
+        'fr': 'fr',
+        'de': 'de',
+        'zh': 'zh',
+        'id': 'id'
+      };
+
+      updateUIText(lang);
+      document.documentElement.setAttribute('lang', lang);
+
+      function updateWikiApiUrl(url) {
+        return url.replace('/en.wikipedia.org/', `/${apiLangMap[lang]}.wikipedia.org/`);
+      }
+
+      // Update API endpoints
+      searchWikipedia = function () {
+        const searchTerm = document.getElementById('searchInput').value;
+        resultsContainer.innerHTML = '<p>Searching... ⏳</p>';
+        articleContentDiv.style.display = 'none';
+        backButton.style.display = 'none';
+
+        fetch(updateWikiApiUrl(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${searchTerm}&format=json&origin=*`))
+          .then(res => res.json())
+          .then(data => {
+            resultsContainer.innerHTML = '';
+            if (data.query && data.query.search.length) {
+              data.query.search.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'result-item';
+                el.innerHTML = `<div class="result-title" onclick="fetchArticleContent('${item.title.replace(/'/g, "\\'")}')">${item.title}</div><div class="result-snippet">${item.snippet} ✨</div>`;
+                resultsContainer.appendChild(el);
+              });
+            } else {
+              resultsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff4444; font-size: 1.2em;">Oops! You just got lost in WikiSpace! 🚀<br>No results found for your search 😢</div>';
+            }
+          })
+          .catch(err => {
+            resultsContainer.innerHTML = `<p>Error: ${err.message} ⚠️</p>`;
+          });
+      }
+
+      fetchArticleContent = function (title) {
+        resultsContainer.style.display = 'none';
+        articleContentDiv.innerHTML = '<p>Loading article... 📄</p>';
+        articleContentDiv.style.display = 'block';
+        backButton.style.display = 'block';
+
+        fetch(updateWikiApiUrl(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(title)}&format=json&prop=text&origin=*`))
+          .then(res => res.json())
+          .then(data => {
+            if (data.parse && data.parse.text && data.parse.text['*']) {
+              articleContentDiv.innerHTML = data.parse.text['*'];
+              // Fix image loading
+              articleContentDiv.querySelectorAll('img').forEach(img => {
+                if (img.src.startsWith('//')) {
+                  img.src = 'https:' + img.src;
+                } else if (img.src.startsWith('/wiki/')) {
+                  img.src = 'https://wikipedia.org' + img.src;
+                }
+                //                // Add error handling for images
+                img.onerror = function () {
+                  this.style.border = '1px dashed #ccc';
+                  this.style.padding = '10px';
+                  this.style.width = '100px';
+                  this.style.height = '100px';
+                  this.style.display = 'inline-flex';
+                  this.style.alignItems = 'center';
+                  this.style.justifyContent = 'center';
+                  this.style.textAlign = 'center';
+                  this.style.color = 'var(--secondary-text)';
+                  this.style.backgroundColor = 'var(--secondary-bg)';
+                  this.alt = '📷 Image not available';
+                };
+              });
+              [...articleContentDiv.querySelectorAll('.editsection, #toc, .infobox')].forEach(el => el.remove());
+            } else {
+              articleContentDiv.innerHTML = '<p>Failed to retrieve article content 😞</p>';
+            }
+          })
+          .catch(err => {
+            articleContentDiv.innerHTML = `<p>Error: ${err.message} ❌</p>`;
+          });
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
+    });
+
+    // Load saved settings and stats when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+      loadStats();
+    });
+
+    // Handle images in article content
+    function handleArticleImages() {
+      if (typeof Chart === 'undefined') {
+        setTimeout(initializeCharts, 100);
+        return;
+      }
+
+      // Activity Chart
+      new Chart(document.getElementById('activityChart'), {
+        type: 'line',
+        data: {
+          labels: ['00:00', '06:00', '12:00', '18:00', '23:59'],
+          datasets: [{
+            label: 'Activity',
+            data: [stats.searchCount, stats.articleCount, stats.searchCount * 0.8, stats.articleCount * 1.2, stats.searchCount],
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent-color'),
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Daily Activity'
+            }
+          }
+        }
+      });
+
+      // Comparison Chart
+      new Chart(document.getElementById('comparisonChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Searches', 'Articles Read'],
+          datasets: [{
+            data: [stats.searchCount, stats.articleCount],
+            backgroundColor: [
+              getComputedStyle(document.documentElement).getPropertyValue('--accent-color'),
+              getComputedStyle(document.documentElement).getPropertyValue('--secondary-text')
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: 'Searches vs Articles'
+            }
+          }
+        }
+      });
+    }
+
+    // Stats tracking
+    let stats = JSON.parse(localStorage.getItem('wikiwave_stats')) || {
+      searchCount: 0,
+      articleCount: 0,
+      lastSearch: ''
+    };
+
+    function loadStats() {
+      try {
+        const savedStats = localStorage.getItem('wikiwave_stats');
+        if (savedStats) {
+          stats = JSON.parse(savedStats);
+        }
+        document.getElementById('search-count').textContent = stats.searchCount;
+        document.getElementById('article-count').textContent = stats.articleCount;
+        document.getElementById('last-search').textContent = stats.lastSearch || '-';
+      } catch (err) {
+        console.error('Error loading stats:', err);
+      }
+    }
+
+    function updateStats(type) {
+      if (type === 'search') stats.searchCount++;
+      if (type === 'article') stats.articleCount++;
+      stats.lastSearch = new Date().toLocaleString();
+
+      document.getElementById('search-count').textContent = stats.searchCount;
+      document.getElementById('article-count').textContent = stats.articleCount;
+      document.getElementById('last-search').textContent = stats.lastSearch;
+
+      localStorage.setItem('wikiwave_stats', JSON.stringify(stats));
+    }
+
+    function loadStats() {
+      document.getElementById('search-count').textContent = stats.searchCount;
+      document.getElementById('article-count').textContent = stats.articleCount;
+      document.getElementById('last-search').textContent = stats.lastSearch || '-';
+    }
+
+    // Fuzzy search implementation
+    function fuzzyMatch(pattern, str) {
+      pattern = pattern.toLowerCase();
+      str = str.toLowerCase();
+      let patternIdx = 0;
+      let strIdx = 0;
+
+      while (patternIdx < pattern.length && strIdx < str.length) {
+        if (pattern[patternIdx] === str[strIdx]) patternIdx++;
+        strIdx++;
+      }
+
+      return patternIdx === pattern.length;
+    }
+
+    // Predictive search
+    let searchTimeout;
+    async function handleSearchInput(event) {
+      const searchTerm = event.target.value.trim();
+      const predictiveResults = document.getElementById('predictive-results');
+      const searchInput = document.getElementById('searchInput');
+
+      // Clear previous results if search is empty
+      if (!searchTerm) {
+        predictiveResults.style.display = 'none';
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      if (searchTerm.length < 2) {
+        predictiveResults.style.display = 'none';
+        return;
+      }
+
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(async () => {
+        try {
+          const response = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${searchTerm}&limit=5&namespace=0&format=json&origin=*`);
+          const [input, titles] = await response.json();
+
+          if (titles.length > 0) {
+            predictiveResults.innerHTML = titles
+              .filter(title => fuzzyMatch(searchTerm, title))
+              .map(title => `<div class="predictive-item" onclick="fetchArticleContent('${title.replace(/'/g, "\\'")}')">${title}</div>`)
+              .join('');
+            predictiveResults.style.display = 'block';
+          } else {
+            predictiveResults.style.display = 'none';
+          }
+        } catch (err) {
+          console.error('Predictive search error:', err);
+        }
+      }, 300);
+    }
+
+    // Random article
+    async function getRandomArticle() {
+      try {
+        const response = await fetch('https://en.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json&origin=*');
+        const data = await response.json();
+        const randomTitle = data.query.random[0].title;
+        fetchArticleContent(randomTitle);
+      } catch (err) {
+        console.error('Random article error:', err);
+      }
+    }
+
+    // Update existing search function to track stats
+    const originalSearchWikipedia = window.searchWikipedia;
+    window.searchWikipedia = function () {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      const searchInput = document.getElementById('searchInput');
+      if (!searchTerm) {
+        searchInput.style.border = '1px solid red';
+        searchInput.placeholder = "Please type something";
+        setTimeout(() => {
+          searchInput.style.border = '';
+          searchInput.placeholder = "Search WikiWave 🔍";
+        }, 3000);
+        return;
+      }
+
+
+      updateStats('search');
+      resultsContainer.innerHTML = '<p>Searching... ⏳</p>';
+      articleContentDiv.style.display = 'none';
+      backButton.style.display = 'none';
+
+      fetch(`https://${document.documentElement.getAttribute('lang') || 'en'}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`)
+        .then(res => res.json())
+        .then(data => {
+          resultsContainer.innerHTML = '';
+          if (data.query && data.query.search.length) {
+            data.query.search.forEach(item => {
+              const el = document.createElement('div');
+              el.className = 'result-item';
+              el.innerHTML = `<div class="result-title" onclick="fetchArticleContent('${item.title.replace(/'/g, "\\'")}')">${item.title}</div><div class="result-snippet">${item.snippet} ✨</div>`;
+              resultsContainer.appendChild(el);
+            });
+          } else {
+            resultsContainer.innerHTML = '<div style="text-align: center; padding: 20px; color: #ff4444; font-size: 1.2em;">Oops! You just got lost in WikiSpace! 🚀<br>No results found for your search 😢</div>';
+          }
+        })
+        .catch(err => {
+          resultsContainer.innerHTML = `<p>Error: ${err.message} ⚠️</p>`;
+        });
+    }
+
+    const originalFetchArticleContent = fetchArticleContent;
+    fetchArticleContent = function (title) {
+      updateStats('article');
+      originalFetchArticleContent(title);
+    }
+
+    // Close predictive search on click outside
+    document.addEventListener('click', function (event) {
+      const predictiveResults = document.getElementById('predictive-results');
+      const searchBox = document.getElementById('search-box');
+      if (!searchBox.contains(event.target) && !predictiveResults.contains(event.target)) {
+        predictiveResults.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+
+</html>
