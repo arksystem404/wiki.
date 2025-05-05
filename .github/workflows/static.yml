@@ -1,0 +1,39 @@
+name: 🌊 WikiWave: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "wikiwave-pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: 🌐 Deploy WikiWave
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧾 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 📦 Upload WikiWave Content
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'  # Serve from root (index.html must be here)
+
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
