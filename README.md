@@ -1,50 +1,130 @@
-# WikiWave // Explore Smarter 🌊
+# wiki.
 
-**WikiWave** is a sleek and user-friendly Wikipedia search engine designed to enhance your knowledge exploration experience. With a focus on intuitive design and helpful features, WikiWave makes diving into the vast world of Wikipedia more enjoyable and efficient.
+**wiki.** is a simple website that lets you search for and read Wikipedia articles.  
+It's designed to feel fast and easy to use — without all the extra stuff on the full Wikipedia site.
 
-## Key Features:
+---
 
-* **Clean and Responsive Interface:** WikiWave boasts a modern design that adapts seamlessly to different screen sizes, ensuring a consistent experience across desktops, tablets, and mobile devices.
-* **Predictive Search:** As you type your query, WikiWave provides intelligent suggestions, helping you find what you're looking for faster.
-* **Fuzzy Search:** Even with typos, WikiWave's fuzzy search algorithm strives to find relevant results.
-* **Direct Article View:** Click on a search result to view the Wikipedia article directly within the WikiWave interface, eliminating distractions.
-* **Back Button Navigation:** Easily return to your search results after viewing an article.
-* **Customizable Settings:**
-    * **Font Size Adjustment:** Tailor the text size to your reading preference.
-    * **Multiple Themes:** Choose from a variety of visually appealing themes, including Light, Dark, High Contrast, Sunset, Midnight, Ocean, Aurora, and Neo.
-    * **Animation Control:** Enable or disable interface animations according to your preference.
-    * **Language Selection:** Search Wikipedia in multiple languages, including English, Spanish, French, German, Chinese, and Bahasa Indonesia.
-* **Statistics Dashboard:** Keep track of your search activity with a built-in stats menu that displays:
-    * Number of searches today.
-    * Number of articles read.
-    * Timestamp of your last search.
-* **Random Article Button:** Discover unexpected knowledge with the "Random" button.
-* **Scroll to Top:** Quickly jump back to the top of the page with a convenient button.
-* **Local Storage:** Your preferred settings and search statistics are saved locally, providing a personalized experience across sessions.
+## How It Works
 
-## Technologies Used:
+This project is just **one file** — it contains the look of the website, the content on the page, and the instructions for how everything works.
 
-* HTML
-* CSS (with custom properties for theming)
-* JavaScript
+### Main Parts of the Website
 
-## How to Use:
+#### 1. Getting Info from Wikipedia
+The code talks to Wikipedia’s public API to get search results and articles.  
+It uses `fetch` to request the needed data.
 
-1.  Visit the [WikiWave website](https://arksystem404.github.io/).
-2.  Type your search term into the input field.
-3.  As you type, predictive results will appear below the search box. You can either click on a suggestion or continue typing your full query.
-4.  Click the "Search" button or press Enter to view the search results.
-5.  Click on the title of any search result to view the corresponding Wikipedia article directly on the page.
-6.  Use the "⬅️ Back" button to return to the search results.
-7.  Click the "⚙️ Settings" button to customize your font size, theme, animations, and language. Your settings will be saved automatically.
-8.  Click the "📊 Stats" button to view your search and reading statistics.
-9.  Click the "🎲 Random" button to be taken to a random Wikipedia article.
-10. Click the "⬆️" button at the bottom right to scroll back to the top of the page.
+```javascript
+const fetchArticle = async (title) => {
+    try {
+        const response = await fetch(
+            `https://en.wikipedia.org/w/api.php?action=parse&format=json&origin=*&page=${encodeURIComponent(title)}`
+        );
+        // ...
+    } catch (error) {
+        console.error('Failed to fetch article:', error);
+    }
+};
+```
 
-## Credits:
+#### 2. Making the Page Appear
+When you search or click an article, the code builds the page in your browser — adding and removing parts as needed.
 
-Developed by [arXiVius](https://github.com/arksystem404).
+#### 3. Custom Look and Feel
+The site includes effects like a glowing, moving grid and a custom cursor, animated with simple CSS/JavaScript.
 
-## Contributing:
+---
 
-**Contributions are welcome and encouraged!** The codebase might be a bit janky, so this is a great opportunity to dive in, learn, and help improve WikiWave. Feel free to fork the repository and submit pull requests with your enhancements or bug fixes. Your help in making WikiWave even better would be greatly appreciated!
+## Why the Code Is Hard to Fix
+
+If the code feels messy or confusing, you’re not wrong.
+
+**Here’s why:**
+
+- **Everything is in one place**  
+  Imagine writing a book where all the chapters, notes, and character lists are jumbled together. That’s what this code is like — a single long file that’s hard to follow.
+
+- **No clear sections**  
+  Search logic, article display, and animations all live in the same space, making it easy for things to get tangled.
+
+- **Manually building the page**  
+  The code manually tells the browser where every button and text goes. It’s like building a house brick-by-brick with your bare hands instead of using prefabricated parts.
+
+```javascript
+const renderSuggestions = (suggestions) => {
+    searchResults.innerHTML = '';
+    suggestions.forEach(title => {
+        const li = document.createElement('li');
+        li.textContent = title;
+        li.className = '...';
+        li.addEventListener('click', () => { /* ... */ });
+        searchResults.appendChild(li);
+    });
+};
+```
+
+---
+
+## How to Make It Better
+
+### 1. Use a Modern Framework
+React or Next.js are like special machines for building websites — they let you create reusable “pieces” that fit together.
+
+**Example:** A Search Bar in React:
+
+```javascript
+import React, { useState, useEffect } from 'react';
+
+const SearchBar = ({ onSelect }) => {
+    const [query, setQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+
+    useEffect(() => {
+        // Debounced fetch call here...
+    }, [query]);
+
+    return (
+        <div className="w-full relative">
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search Wikipedia..."
+            />
+            <ul className="absolute top-full ...">
+                {suggestions.map((title) => (
+                    <li key={title} onClick={() => onSelect(title)}>
+                        {title}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+```
+
+---
+
+### 2. Separate the Code
+- Put search logic in `search.js`  
+- Put article display in `article.js`  
+- Put animations in `animations.js`  
+
+This way, you can fix or improve one part without breaking everything else.
+
+---
+
+### 3. Let the Framework Do the Work
+In React (or similar), you **describe** what you want, and it updates the page automatically when data changes.  
+_No more manually adding/removing elements._
+
+---
+
+## What to Do Next
+
+1. Learn React (or Next.js) — both solve the problems in this project.  
+2. Refactor the current code into smaller files.  
+3. Replace manual DOM updates with framework components.  
+
+> 💡 **Tip:** You can run this project by simply opening the file in a browser.
